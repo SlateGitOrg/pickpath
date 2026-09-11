@@ -1,0 +1,12 @@
+{
+  "name": "pickpath",
+  "version": "0.1.0",
+  "description": "An offline-first warehouse picking PWA where sync conflicts become supervisor exceptions instead of silently lost picks.",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=22.6" },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node src/demo.ts"
+  }
+}
