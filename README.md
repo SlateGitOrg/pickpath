@@ -2,6 +2,22 @@
 
 > An offline-first warehouse picking PWA where sync conflicts become supervisor exceptions instead of silently lost picks.
 
+## Live deployment
+
+[![CI and deployment](https://github.com/SlateGitOrg/pickpath/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SlateGitOrg/pickpath/actions/workflows/ci.yml)
+
+[Open the interactive PickPath demo](https://slategitorg.github.io/pickpath/)
+
+The deployed interface uses a deterministic offline scenario to make the repository's tested decision rule visible without external services or private data.
+
+### Desktop
+
+![PickPath desktop deployment](docs/assets/deployed-desktop.png)
+
+### Mobile
+
+<img src="docs/assets/deployed-mobile.png" alt="PickPath mobile deployment" width="390">
+
 `FLAGSHIP` · **Full Stack Engineering** · Advanced · ~4-5 weeks · Logistics / 3PL warehousing
 
 **Primary language:** TypeScript
