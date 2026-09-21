@@ -1,0 +1,19 @@
+
+const n=(value,fallback=0)=>Number.isFinite(Number(value))?Number(value):fallback;
+const clamp=(value,low,high)=>Math.min(high,Math.max(low,value));
+const round=(value,digits=2)=>Number(value.toFixed(digits));
+const mean=values=>values.length?values.reduce((sum,value)=>sum+value,0)/values.length:0;
+const parseJSON=(value,fallback=[])=>{try{return JSON.parse(value)}catch{return fallback}};
+const valuesFrom=value=>String(value).split(/[\s,]+/).map(Number).filter(Number.isFinite);
+const result=(status,summary,metrics,rows,detail='')=>({status,summary,metrics,rows,detail});
+const erf=x=>{const sign=x<0?-1:1,a=Math.abs(x),t=1/(1+0.3275911*a);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-a*a);return sign*y};
+const normalCdf=z=>0.5*(1+erf(z/Math.sqrt(2)));
+const wilson=(successes,total)=>{if(!total)return[0,0];const z=1.96,p=successes/total,d=1+z*z/total,c=(p+z*z/(2*total))/d,h=z*Math.sqrt((p*(1-p)+z*z/(4*total))/total)/d;return[clamp(c-h,0,1),clamp(c+h,0,1)]};
+const sha256=async value=>{const bytes=new TextEncoder().encode(String(value));const digest=await crypto.subtle.digest('SHA-256',bytes);return[...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('')};
+const tag=(xml,name)=>xml.match(new RegExp('<'+name+'[^>]*>([\\s\\S]*?)<\\/'+name+'>','i'))?.[1]?.trim()??'';
+const similarity=(a,b)=>{const x=String(a).toLowerCase(),y=String(b).toLowerCase();if(x===y)return 1;const A=new Set(x.split(/\W+/).filter(Boolean)),B=new Set(y.split(/\W+/).filter(Boolean));const inter=[...A].filter(v=>B.has(v)).length;return inter/Math.max(1,new Set([...A,...B]).size)};
+
+export const meta={"slug":"pickpath","name":"PickPath","eyebrow":"Offline warehouse reconciliation","description":"Merge offline pick queues against reserved stock and create supervisor exceptions for conflicts.","fields":[{"name":"availableStock","label":"Available stock","type":"number","min":0,"max":10000,"step":1,"help":""},{"name":"reservedStock","label":"Already reserved","type":"number","min":0,"max":10000,"step":1,"help":""},{"name":"deviceAPicks","label":"Device A offline picks","type":"number","min":0,"max":10000,"step":1,"help":""},{"name":"deviceBPicks","label":"Device B offline picks","type":"number","min":0,"max":10000,"step":1,"help":""},{"name":"resolution","label":"Conflict policy","type":"select","options":["supervisor_exception","last_write_wins"],"help":""}]};
+export const initialState={"availableStock":20,"reservedStock":8,"deviceAPicks":7,"deviceBPicks":9,"resolution":"supervisor_exception"};
+export const alternateState={"availableStock":30,"reservedStock":8,"deviceAPicks":7,"deviceBPicks":9,"resolution":"supervisor_exception"};
+export async function compute(i){const available=n(i.availableStock),reserved=n(i.reservedStock),a=n(i.deviceAPicks),b=n(i.deviceBPicks),free=Math.max(0,available-reserved),requested=a+b,conflict=requested>free,accepted=conflict?Math.max(0,free):requested,lost=i.resolution==='last_write_wins'&&conflict?Math.min(a,b):0,status=conflict&&i.resolution==='supervisor_exception'?'Supervisor exception created':conflict?'Conflict overwritten':'Queues merged';return result(status,conflict?`${requested} offline picks compete for ${free} free units.`:`All ${requested} offline picks reconcile against current stock.`,[{label:'Free stock',value:free},{label:'Offline demand',value:requested},{label:'Accepted picks',value:accepted},{label:'Silently lost picks',value:lost}],[{device:'Device A',queued:a,outcome:conflict?'Pending supervisor':'Applied'},{device:'Device B',queued:b,outcome:conflict&&i.resolution==='last_write_wins'?'Overwrites earlier queue':conflict?'Pending supervisor':'Applied'}],'Supervisor exceptions preserve both intents; last-write-wins discards one without review.')}
