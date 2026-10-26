@@ -3,9 +3,9 @@ import { ReservationLedger, OfflineQueue, type ApplyOutcome } from './sync.ts';
 /**
  * The deterministic partition simulator.
  *
- * Built early on purpose: you cannot develop offline-sync behaviour by
- * unplugging your laptop and hoping. Every double-pick below is INDUCED at a
- * known point, so "zero silent losses" is a count, not a belief.
+ * Offline-sync behaviour is hard to exercise by hand, so conflicts are
+ * simulated. Every double-pick below is INDUCED at a known point, so
+ * "zero silent losses" is a count, not a belief.
  */
 
 function mulberry32(seed: number): () => number {

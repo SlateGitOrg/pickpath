@@ -1,8 +1,6 @@
 /**
  * Offline picking: the sync protocol and the reservation ledger.
  *
- * THE DIFFERENTIATOR LIVES HERE.
- *
  * Two pickers, both offline, both claim the last unit of an SKU. Something has
  * to give. The usual answers are both wrong for this problem:
  *

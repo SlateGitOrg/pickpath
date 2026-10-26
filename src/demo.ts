@@ -34,7 +34,7 @@ l.reserve('bob', 'SKU-4471', 1);
 l.apply({ pickerId: 'alice', clientSeq: 0, sku: 'SKU-4471', qty: 1, takenAtMs: 1 });
 l.apply({ pickerId: 'bob', clientSeq: 0, sku: 'SKU-4471', qty: 1, takenAtMs: 2 });
 
-console.log('  What the supervisor receives, 3 seconds after reconnect:');
+console.log('  What the supervisor receives, on reconnect:');
 for (const e of l.exceptionTasks) {
   console.log(`    SKU ${e.sku}  picker=${e.pickerId}  reason=${e.reason}`);
   console.log(`      requested ${e.requested}, available ${e.available}, ` +

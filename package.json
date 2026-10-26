@@ -4,7 +4,7 @@
   "description": "An offline-first warehouse picking PWA where sync conflicts become supervisor exceptions instead of silently lost picks.",
   "type": "module",
   "private": true,
-  "engines": { "node": ">=22.6" },
+  "engines": { "node": ">=22.18" },
   "scripts": {
     "test": "node --test",
     "demo": "node src/demo.ts"
