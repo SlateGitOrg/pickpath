@@ -5,7 +5,7 @@
 Warehouse aisles are Wi-Fi dead zones, so pick scanners queue their actions
 offline and replay them on reconnect. When two pickers were both assigned the
 last unit of an SKU, the sync layer has to decide what happens to the second
-pick. PickPath models that decision and makes the outcome measurable.
+pick. pickpath models that decision and makes the outcome measurable.
 
 ## Components
 

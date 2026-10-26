@@ -1,5 +1,5 @@
 /**
- * The 60-second artefact: 500 induced double-picks, two strategies.
+ * Demo: 500 induced double-picks, two strategies.
  * Run: `npm run demo`
  */
 import { simulatePartitions, simulateLastWriteWins } from './partition.ts';
